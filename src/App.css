@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+iframe:focus {
+  outline: solid 8px red;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
