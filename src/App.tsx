@@ -1,19 +1,36 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import Application from "./Application";
 
 const OS = () => {
   const [appList, setAppList] = useState<any[]>([]);
-  const [activeApps, setActiveApps] = useState<Set<string>>(
-    new Set(["https://type.constraint.systems"])
-  );
+  const [activeApps, setActiveApps] = useState<Set<string>>(new Set());
   const [focused, setFocused] = useState<string | null>(null);
   const [showApps, setShowApps] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+
+  const addApp = useCallback(
+    (appUrl: string) => {
+      setActiveApps((prev) => new Set(prev).add(appUrl));
+    },
+    [setActiveApps]
+  );
 
   useEffect(() => {
     fetch("https://constraint.systems/tools.json")
       .then((res) => res.json())
       .then((data) => {
         setAppList(data.tools);
+
+        const toAdd = data.tools.slice(0, 3).reverse();
+        for (let i = 0; i < toAdd.length; i++) {
+          const app = toAdd[i];
+          setTimeout(() => {
+            addApp(app.url);
+            if (i === toAdd.length - 1) {
+              setFocused(app.title);
+            }
+          }, i * 400 + 400);
+        }
       });
   }, []);
 
@@ -35,14 +52,49 @@ const OS = () => {
     <div onPointerDown={handleCanvasPointerDown} style={{ height: "100vh" }}>
       <div
         style={{
-          color: "black",
-          padding: "4px 1ch",
+          position: "relative",
+          color: "#fff",
+          background: "#222",
+          padding: "0 1ch",
+          height: 32,
+          lineHeight: "32px",
           display: "flex",
           justifyContent: "space-between",
         }}
       >
-        <div onClick={() => setShowApps(!showApps)}>Apps</div>
-        <div>CSOS{focused ? ": " + focused : ""}</div>
+        <div
+          className="hover"
+          style={{
+            cursor: "pointer",
+            height: 32,
+            padding: "0 1ch",
+            position: "absolute",
+            left: 0,
+            top: 0,
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowApps(!showApps);
+          }}
+        >
+          Apps
+        </div>
+        <div
+          className="hover"
+          style={{
+            position: "absolute",
+            cursor: "pointer",
+            right: 0,
+            top: 0,
+            padding: "0 1ch",
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowAbout(!showAbout);
+          }}
+        >
+          About
+        </div>
       </div>
       <div>
         {appList.length > 0
@@ -54,6 +106,7 @@ const OS = () => {
                   name={info.title}
                   src={src}
                   focused={info.title === focused}
+                  focusedName={focused}
                   setFocused={setFocused}
                   removeApp={removeApp}
                 />
@@ -61,47 +114,162 @@ const OS = () => {
             })
           : null}
       </div>
-      <div
-        style={{
-          position: "absolute",
-          height: "calc(100% - 0px)",
-          overflow: "auto",
-          zIndex: 9,
-          pointerEvents: "auto",
-          maxWidth: 360,
-          left: 0,
-          top: 0,
-          border: "solid 2px black",
-        }}
-      >
-        {appList.map((app) => (
+      {showApps ? (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 9999,
+            pointerEvents: "auto",
+            maxWidth: 16 * 22,
+            left: 16,
+            top: 48,
+            outline: "solid 2px black",
+            height: "calc(100% - 64px)",
+            width: "100%",
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
           <div
-            key={app.title}
             style={{
-              padding: "2ch",
-              display: showApps ? "block" : "none",
-              maxWidth: 380,
-              borderBottom: "solid 1px black",
-              cursor: "pointer",
-              pointerEvents: "auto",
-              background: activeApps.has(app.url)
-                ? "rgba(200,200,200,0.9)"
-                : "rgba(255,255,255,0.9)",
-            }}
-            onClick={() => {
-              const newApps = new Set(activeApps);
-              newApps.add(app.url);
-              setActiveApps(newApps);
-              setFocused(app.title);
+              background: "#222",
+              color: "#eee",
+              height: 32,
+              lineHeight: "32px",
+              padding: "0 1ch",
+              justifyContent: "space-between",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: "100%",
+              zIndex: 9,
             }}
           >
-            <div>
-              <strong>{app.title}</strong>
+            <div>Apps</div>
+            <div
+              className="hover"
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 0,
+                width: 32,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowApps(false)}
+            >
+              X
             </div>
-            <div>{app.description}</div>
           </div>
-        ))}
-      </div>
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 32,
+              width: "100%",
+              height: "calc(100% - 32px)",
+              overflowY: "auto",
+            }}
+          >
+            {appList.map((app, i) => (
+              <div
+                key={app.title}
+                style={{
+                  padding: "16px 16px",
+                  display: showApps ? "block" : "none",
+                  maxWidth: 380,
+                  width: "100%",
+                  cursor: "pointer",
+                  pointerEvents: "auto",
+                  borderBottom:
+                    i === appList.length - 1 ? "none" : "solid 1px black",
+                  background: activeApps.has(app.url)
+                    ? "rgba(210,210,210,0.9)"
+                    : "rgba(255,255,255,0.9)",
+                }}
+                onClick={() => {
+                  const newApps = new Set(activeApps);
+                  newApps.add(app.url);
+                  setActiveApps(newApps);
+                  setFocused(app.title);
+                }}
+              >
+                <div>{app.title}</div>
+                <div style={{ color: "#666" }}>{app.description}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {showAbout ? (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 9999,
+            pointerEvents: "auto",
+            maxWidth: 16 * 22,
+            right: 16,
+            top: 48,
+            outline: "solid 2px black",
+            width: "100%",
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <div
+            style={{
+              background: "#222",
+              color: "#eee",
+              height: 32,
+              lineHeight: "32px",
+              padding: "0 1ch",
+              justifyContent: "space-between",
+              width: "100%",
+              zIndex: 9,
+            }}
+          >
+            <div>About</div>
+            <div
+              className="hover"
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 0,
+                width: 32,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowAbout(false)}
+            >
+              X
+            </div>
+          </div>
+          <div
+            style={{
+              width: "100%",
+              background: "white",
+              padding: "1ch 8px",
+            }}
+          >
+            <p>
+              Constraint Systems is a collection of experimental creative tools
+              for manipulating images and text.
+            </p>
+            <p>
+              OS uses iframes to let you open multiple tools at once. By
+              downloading and uploading files between them you can make your own
+              creative pipeline.
+            </p>
+            <p>
+              <a
+                href="https://constraint.systems"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Constraint Systems
+              </a>
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

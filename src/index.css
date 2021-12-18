@@ -1,10 +1,18 @@
+html {
+  background: #ddd;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "JetBrains Mono", serif, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 code {
@@ -15,8 +23,41 @@ code {
 body {
   overflow: hidden;
   touch-action: none;
+  user-select: none;
+  font-size: 13.33px;
+  line-height: 16px;
 }
 
 iframe.focus {
   outline: solid 4px red;
+}
+
+.hover:hover {
+  box-shadow: inset 0 0 0 128px rgba(0, 0, 0, 0.25);
+}
+
+.show-hover-child {
+  display: none;
+}
+
+.show-hover-parent.show-hover .show-hover-child {
+  display: block;
+}
+
+@media (hover: hover) {
+  .show-hover-parent:hover .show-hover-child {
+    display: block;
+  }
+}
+
+p {
+  margin: 0;
+  margin-bottom: 16px;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: inherit;
 }

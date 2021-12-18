@@ -14,7 +14,11 @@ export const usePointerDrag = () => {
   const dragPointerMove = (e: PointerEvent) => {
     if (isDraggingRef.current) {
       const down = downRef.current;
-      const dragged = [e.clientX - down[0], e.clientY - down[1]];
+      const bounded = {
+        x: Math.max(0, Math.min(e.clientX, window.innerWidth)),
+        y: Math.max(0, Math.min(e.clientY, window.innerHeight)),
+      };
+      const dragged = [bounded.x - down[0], bounded.y - down[1]];
       return dragged;
     } else {
       return [0, 0];
