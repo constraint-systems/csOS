@@ -25,8 +25,12 @@ const Application = ({
   setFocused: any;
   removeApp: any;
 }) => {
-  const startWidth = Math.min(640, window.innerWidth - 24);
-  const startHeight = Math.min(480, window.innerHeight - 24);
+  const startWidth = Math.min(840, window.innerWidth - 32);
+  const startHeight = Math.min(
+    Math.floor(startWidth / 1.33333),
+    window.innerHeight - 24
+  );
+
   const startLeft = window.innerWidth / 2 - startWidth / 2;
   const startTop = window.innerHeight / 2 - startHeight / 2;
 
@@ -62,8 +66,8 @@ const Application = ({
       let moved = false;
       for (const corner of corners) {
         if (corner[0] === newLeft && corner[1] === newTop) {
-          newLeft += 16 * 2;
-          newTop += 16 + 2;
+          newLeft += 16 * 1;
+          newTop += 16 * 1;
           moved = true;
         }
       }

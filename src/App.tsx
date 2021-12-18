@@ -21,7 +21,7 @@ const OS = () => {
       .then((data) => {
         setAppList(data.tools);
 
-        const toAdd = data.tools.slice(0, 3).reverse();
+        const toAdd = data.tools.slice(0, 2).reverse();
         for (let i = 0; i < toAdd.length; i++) {
           const app = toAdd[i];
           setTimeout(() => {
