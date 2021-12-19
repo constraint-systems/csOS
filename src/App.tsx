@@ -19,12 +19,12 @@ const OS = () => {
     fetch("https://constraint.systems/tools.json")
       .then((res) => res.json())
       .then((data) => {
-        data.tools.filter(
-          (app: any) => app.url !== "https://csos.constraint.systems"
+        const filtered = data.tools.filter(
+          (app: any) => app.url !== "https://csOS.constraint.systems"
         );
-        setAppList(data.tools);
+        setAppList(filtered);
 
-        const toAdd = data.tools.slice(0, 1).reverse();
+        const toAdd = filtered.slice(0, 1).reverse();
         for (let i = 0; i < toAdd.length; i++) {
           const app = toAdd[i];
           setTimeout(() => {
