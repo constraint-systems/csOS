@@ -19,9 +19,12 @@ const OS = () => {
     fetch("https://constraint.systems/tools.json")
       .then((res) => res.json())
       .then((data) => {
+        data.tools.filter(
+          (app: any) => app.url !== "https://csos.constraint.systems"
+        );
         setAppList(data.tools);
 
-        const toAdd = data.tools.slice(0, 2).reverse();
+        const toAdd = data.tools.slice(0, 1).reverse();
         for (let i = 0; i < toAdd.length; i++) {
           const app = toAdd[i];
           setTimeout(() => {
@@ -246,7 +249,7 @@ const OS = () => {
             style={{
               width: "100%",
               background: "white",
-              padding: "1ch 8px",
+              padding: "16px",
             }}
           >
             <p>
@@ -254,7 +257,7 @@ const OS = () => {
               for manipulating images and text.
             </p>
             <p>
-              OS uses iframes to let you open multiple tools at once. By
+              csOS uses iframes to let you open multiple tools at once. By
               downloading and uploading files between them you can make your own
               creative pipeline.
             </p>

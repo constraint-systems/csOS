@@ -281,20 +281,13 @@ const Application = ({
         onPointerUp={handlePointerUp}
         // @ts-ignore
         onPointerOver={handlePointerOver}
-        onDoubleClick={() => {
-          const startWidth = Math.min(640, window.innerWidth - 24);
-          const startHeight = Math.min(480, window.innerHeight - 24);
-          setWidth(startWidth);
-          setHeight(startHeight);
-          setLeft(window.innerWidth / 2 - startWidth / 2);
-          setTop(window.innerHeight / 2 - startHeight / 2);
-        }}
       >
         <div>{name}</div>
         <div style={{ display: "flex", textAlign: "center" }}>
           <div
             role="button"
             className="hover"
+            title="refresh"
             style={{ width: 32, cursor: "pointer" }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -403,6 +396,28 @@ const Application = ({
                     ▽
                   </div>
                 </div>
+                <div
+                  role="button"
+                  className="hover"
+                  style={{ width: 48 * 2, cursor: "pointer" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMaximized(false);
+                    const startWidth = Math.min(840, window.innerWidth - 32);
+                    const startHeight = Math.min(
+                      Math.floor(startWidth / 1.33333),
+                      window.innerHeight - 24
+                    );
+                    const startLeft = window.innerWidth / 2 - startWidth / 2;
+                    const startTop = window.innerHeight / 2 - startHeight / 2;
+                    setLeft(startLeft);
+                    setTop(startTop);
+                    setWidth(startWidth);
+                    setHeight(startHeight);
+                  }}
+                >
+                  □
+                </div>
               </div>
             </div>
           </div>
@@ -426,6 +441,7 @@ const Application = ({
           <div
             role="button"
             className="hover"
+            title="close"
             style={{ width: 32, cursor: "pointer" }}
             onPointerDown={(e) => {
               e.stopPropagation();
