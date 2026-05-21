@@ -185,13 +185,13 @@ const OS = () => {
                   pointerEvents: "auto",
                   borderBottom:
                     i === appList.length - 1 ? "none" : "solid 1px black",
-                  background: activeApps.has(app.url)
+                  background: activeApps.has(app.link)
                     ? "rgba(210,210,210,0.9)"
                     : "rgba(255,255,255,0.9)",
                 }}
                 onClick={() => {
                   const newApps = new Set(activeApps);
-                  newApps.add(app.url);
+                  newApps.add(app.link);
                   setActiveApps(newApps);
                   setFocused(app.title);
                 }}
