@@ -19,12 +19,17 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "react-scripts build",
     "deploy": "gh-pages -d build"
+  },
+  "overrides": {
+    "postcss-safe-parser": {
+      "postcss": "8.4.49"
+    }
   },
   "eslintConfig": {
     "extends": [

@@ -19,8 +19,8 @@ const OS = () => {
     fetch("https://constraint.systems/tools.json")
       .then((res) => res.json())
       .then((data) => {
-        const filtered = data.tools.filter(
-          (app: any) => app.url !== "https://csOS.constraint.systems"
+        const filtered = data.filter(
+          (app: any) => app.link !== "https://csOS.constraint.systems"
         );
         setAppList(filtered);
 
@@ -28,7 +28,7 @@ const OS = () => {
         for (let i = 0; i < toAdd.length; i++) {
           const app = toAdd[i];
           setTimeout(() => {
-            addApp(app.url);
+            addApp(app.link);
             if (i === toAdd.length - 1) {
               setFocused(app.title);
             }
@@ -102,7 +102,7 @@ const OS = () => {
       <div>
         {appList.length > 0
           ? Array.from(activeApps).map((src) => {
-              const info = appList.find((app) => app.url === src);
+              const info = appList.find((app) => app.link === src);
               return (
                 <Application
                   key={src}
